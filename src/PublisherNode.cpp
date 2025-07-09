@@ -1,5 +1,6 @@
 #include "PublisherNode.h"
 #include <sensor_msgs/point_cloud2_iterator.hpp>
+#include <sensor_msgs/msg/point_field.hpp>
 
 void PCDPublisher::PublishPointCloud(const aeva::api::PointCloud& point_cloud) {
   sensor_msgs::msg::PointCloud2 ros_msg;
@@ -11,16 +12,31 @@ void PCDPublisher::PublishPointCloud(const aeva::api::PointCloud& point_cloud) {
   ros_msg.is_bigendian = false;
 
   sensor_msgs::PointCloud2Modifier mod(ros_msg);
-  mod.setPointCloud2FieldsByString(1, "xyz");
+
+  mod.setPointCloud2Fields(4,
+    "x", 1, sensor_msgs::msg::PointField::FLOAT32,
+    "y", 1, sensor_msgs::msg::PointField::FLOAT32,
+    "z", 1, sensor_msgs::msg::PointField::FLOAT32,
+    "intensity", 1, sensor_msgs::msg::PointField::FLOAT32);
+
+//   mod.setPointCloud2FieldsByString(1, "xyz");
   mod.resize(point_cloud.points.size());
 
   sensor_msgs::PointCloud2Iterator<float> x(ros_msg, "x");
   sensor_msgs::PointCloud2Iterator<float> y(ros_msg, "y");
   sensor_msgs::PointCloud2Iterator<float> z(ros_msg, "z");
+  sensor_msgs::PointCloud2Iterator<float> intensity(ros_msg, "intensity");
 
   for (const auto& pt : point_cloud.points) {
-    *x = pt.x; *y = pt.y; *z = pt.z;
-    ++x; ++y; ++z;
+    *x = pt.x; 
+    *y = pt.y; 
+    *z = pt.z; 
+    *intensity = pt.intensity;
+    
+    ++x; 
+    ++y; 
+    ++z; 
+    ++intensity;
   }
 
   pub_->publish(ros_msg);
