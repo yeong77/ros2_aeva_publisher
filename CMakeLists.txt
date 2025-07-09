@@ -49,7 +49,10 @@ set(DEPENDENCIES
 # add_executable(ros2_aeva_publisher src/ros2_aeva_publisher.cc)
 # ament_target_dependencies(ros2_aeva_publisher ${DEPENDENCIES})
 
-add_executable(aeva_driver_node src/aeva_driver_node.cpp)
+add_executable(aeva_driver_node 
+  src/aeva_driver_node.cpp
+  src/PublisherNode.cpp
+)
 ament_target_dependencies(aeva_driver_node ${DEPENDENCIES})
 
 # target_link_libraries(ros2_aeva_publisher
