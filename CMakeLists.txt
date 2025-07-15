@@ -32,41 +32,33 @@ link_directories("/opt/aeva/aeva-api/aeva/library")
 
 set(DEPENDENCIES
   aeva_msgs
-  nav_msgs
   rclcpp
   sensor_msgs
   std_msgs
-  tf2_msgs
-  visualization_msgs
 )
 
-# add_library(AevaPublisherNode STATIC src/AevaPublisherNode.cc src/AevaPublisherNode.h)
-# ament_target_dependencies(AevaPublisherNode ${DEPENDENCIES})
-
-# add_library(AevaAPICallbacks STATIC src/AevaAPICallbacks.cc src/AevaAPICallbacks.h)
-# ament_target_dependencies(AevaAPICallbacks ${DEPENDENCIES})
-
-# add_executable(ros2_aeva_publisher src/ros2_aeva_publisher.cc)
-# ament_target_dependencies(ros2_aeva_publisher ${DEPENDENCIES})
 
 add_executable(aeva_driver_node 
   src/aeva_driver_node.cpp
-  src/PublisherNode.cpp
+  src/PCDPublisher.cpp
 )
 ament_target_dependencies(aeva_driver_node ${DEPENDENCIES})
 
-# target_link_libraries(ros2_aeva_publisher
-#   ${rclcpp_LIBRARIES}
-#   AevaAPI
-#   AevaAPICallbacks
-#   AevaPublisherNode
-# )
+add_executable(odom_publisher_node
+  src/OdomPublisher.cpp
+)
+ament_target_dependencies(odom_publisher_node
+  rclcpp
+  sensor_msgs
+) 
+
+
 target_link_libraries(aeva_driver_node
   AevaAPI
 )
 install(TARGETS
-  # ros2_aeva_publisher
-  aeva_driver_node
+  # aeva_driver_node
+  # odom_publisher_node
   DESTINATION lib/${PROJECT_NAME}
 )
 

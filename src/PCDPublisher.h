@@ -10,7 +10,6 @@ public:
 
 private:
   void PublishPointCloud(const aeva::api::PointCloud& point_cloud);
-
   rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr pub_;
   rclcpp::TimerBase::SharedPtr poll_timer_;
   aeva::api::v12_2_0::AevaAPI aeva_api_;

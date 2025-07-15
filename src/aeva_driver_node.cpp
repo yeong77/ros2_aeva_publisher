@@ -2,14 +2,18 @@
 #include <sensor_msgs/msg/point_cloud2.hpp>
 #include <sensor_msgs/point_cloud2_iterator.hpp>
 #include "aeva/api/AevaAPI.h"
-#include "PublisherNode.h"
+#include "PCDPublisher.h"
 
 using namespace aeva::api::v12_2_0;
 
 PCDPublisher::PCDPublisher()
 : rclcpp::Node("pcd_publisher"), aeva_api_()
 {
-  pub_ = this->create_publisher<sensor_msgs::msg::PointCloud2>("/aeva/pointcloud", 10);
+  rclcpp::QoS qos = rclcpp::QoS(rclcpp::KeepLast(1))
+                    .best_effort()
+                    .durability_volatile();
+                    
+  pub_ = this->create_publisher<sensor_msgs::msg::PointCloud2>("/aeva/pointcloud", qos);
 
   aeva::api::Sensor sensor;
   sensor.id_ = "aeva_sensor";

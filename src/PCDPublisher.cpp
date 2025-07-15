@@ -1,4 +1,4 @@
-#include "PublisherNode.h"
+#include "PCDPublisher.h"
 #include <sensor_msgs/point_cloud2_iterator.hpp>
 #include <sensor_msgs/msg/point_field.hpp>
 
@@ -20,7 +20,6 @@ void PCDPublisher::PublishPointCloud(const aeva::api::PointCloud& point_cloud) {
     "intensity", 1, sensor_msgs::msg::PointField::FLOAT32,
     "velocity", 1, sensor_msgs::msg::PointField::FLOAT32);
 
-//   mod.setPointCloud2FieldsByString(1, "xyz");
   mod.resize(point_cloud.points.size());
 
   sensor_msgs::PointCloud2Iterator<float> x(ros_msg, "x");
