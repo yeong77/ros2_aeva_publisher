@@ -1,0 +1,16 @@
+doppler_icp_node:
+  ros__parameters:
+    convergence_thresh: 1e-6
+    max_iters: 200
+    max_corr_distance: 0.1
+    downsample_factor: 2
+    normals_radius: 10.0
+    normals_max_nn: 30
+    lambda_doppler: 0.015
+    reject_outliers: true
+    outlier_thresh: 0.2
+    rejection_min_iters: 2
+    geometric_min_iters: 0
+    doppler_min_iters: 0
+    geometric_k: 0.5 #0.01
+    doppler_k: 0.2  #0.01

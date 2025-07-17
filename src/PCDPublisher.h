@@ -4,6 +4,9 @@
 #include <sensor_msgs/msg/point_cloud2.hpp>
 #include "aeva/api/AevaAPI.h"
 
+#include <open3d/Open3D.h>
+#include <unordered_map>
+
 class PCDPublisher : public rclcpp::Node {
 public:
   PCDPublisher();

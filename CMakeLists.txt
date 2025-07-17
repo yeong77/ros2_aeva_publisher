@@ -19,6 +19,11 @@ find_package(sensor_msgs REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(tf2_msgs REQUIRED)
 find_package(visualization_msgs REQUIRED)
+find_package(tf2_ros REQUIRED)
+find_package(tf2_eigen REQUIRED)
+find_package(Open3D REQUIRED)
+find_package(Eigen3 REQUIRED)
+
 
 set(AEVA_API_ROS2_BUILD true)
 
@@ -35,6 +40,10 @@ set(DEPENDENCIES
   rclcpp
   sensor_msgs
   std_msgs
+  nav_msgs
+  tf2_ros
+  tf2_eigen
+  visualization_msgs
 )
 
 
@@ -44,21 +53,26 @@ add_executable(aeva_driver_node
 )
 ament_target_dependencies(aeva_driver_node ${DEPENDENCIES})
 
-add_executable(odom_publisher_node
-  src/OdomPublisher.cpp
+add_executable(doppler_icp_node
+  src/doppler_icp_node.cpp
+  src/registration_node.cpp
 )
-ament_target_dependencies(odom_publisher_node
-  rclcpp
-  sensor_msgs
-) 
+ament_target_dependencies(doppler_icp_node ${DEPENDENCIES}) 
 
 
 target_link_libraries(aeva_driver_node
   AevaAPI
 )
+
+target_link_libraries(doppler_icp_node
+  ${Open3D_LIBRARIES}
+  Eigen3::Eigen
+)
+
 install(TARGETS
-  # aeva_driver_node
+  aeva_driver_node
   # odom_publisher_node
+  doppler_icp_node
   DESTINATION lib/${PROJECT_NAME}
 )
 
