@@ -57,6 +57,7 @@ void DopplerICPRealtime::pointcloud_callback(const sensor_msgs::msg::PointCloud2
 
     if(msg->data.size() == 0) return;
 
+
     RCLCPP_INFO(this->get_logger(), "Received point cloud.");
 
     auto target_pcd = this->pointcloud2_to_o3d(*msg);
@@ -82,8 +83,8 @@ void DopplerICPRealtime::pointcloud_callback(const sensor_msgs::msg::PointCloud2
     Eigen::Matrix4d T_rel = result.transformation_.inverse();
 
     Eigen::Matrix4d new_pose = poses_.back() * T_rel; //Eigen::Matrix4d::Identity() * T_rel;
-    //poses_.push_back(new_pose);
-    poses_.push_back(result.transformation_);
+    poses_.push_back(new_pose);
+    // poses_.push_back(result.transformation_);
 
     publish_odometry(new_pose, msg->header);
 
@@ -94,7 +95,7 @@ std::shared_ptr<open3d::geometry::PointCloud> DopplerICPRealtime::pointcloud2_to
     auto pcd = std::make_shared<open3d::geometry::PointCloud>();
 
     
-sensor_msgs::PointCloud2ConstIterator<float> iter_x(msg, "x");
+    sensor_msgs::PointCloud2ConstIterator<float> iter_x(msg, "x");
     sensor_msgs::PointCloud2ConstIterator<float> iter_y(msg, "y");
     sensor_msgs::PointCloud2ConstIterator<float> iter_z(msg, "z");
     sensor_msgs::PointCloud2ConstIterator<float> iter_velocity(msg, "velocity");
@@ -102,10 +103,6 @@ sensor_msgs::PointCloud2ConstIterator<float> iter_x(msg, "x");
     for (; iter_x != iter_x.end(); ++iter_x, ++iter_y, ++iter_z, ++iter_velocity) {
         Eigen::Vector3d point(*iter_x, *iter_y, *iter_z);
         pcd->points_.push_back(point);
-
-        // Doppler 값을 normal의 x에 임시 저장
-        // (Open3D 기본 PointCloud에 doppler 필드가 없기 때문)
-        // pcd->normals_.push_back(Eigen::Vector3d(*iter_velocity, 0.0, 0.0));
         pcd->dopplers_.push_back(*iter_velocity);
     }
 
