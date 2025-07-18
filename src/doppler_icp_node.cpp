@@ -54,6 +54,9 @@ DopplerICPRealtime::DopplerICPRealtime()
 }
 
 void DopplerICPRealtime::pointcloud_callback(const sensor_msgs::msg::PointCloud2::SharedPtr msg) {
+
+    if(msg->data.size() == 0) return;
+
     RCLCPP_INFO(this->get_logger(), "Received point cloud.");
 
     auto target_pcd = this->pointcloud2_to_o3d(*msg);
@@ -67,7 +70,8 @@ void DopplerICPRealtime::pointcloud_callback(const sensor_msgs::msg::PointCloud2
     Eigen::Matrix4d init_transform = poses_.back();
 
     open3d::pipelines::registration::RegistrationResult result;
-    
+
+
     try {
         result = this->DopplerICP(prev_pcd_, target_pcd, params_, init_transform);
     } catch (const std::exception& e) {
@@ -77,8 +81,9 @@ void DopplerICPRealtime::pointcloud_callback(const sensor_msgs::msg::PointCloud2
 
     Eigen::Matrix4d T_rel = result.transformation_.inverse();
 
-    Eigen::Matrix4d new_pose = poses_.back() * T_rel;
-    poses_.push_back(new_pose);
+    Eigen::Matrix4d new_pose = poses_.back() * T_rel; //Eigen::Matrix4d::Identity() * T_rel;
+    //poses_.push_back(new_pose);
+    poses_.push_back(result.transformation_);
 
     publish_odometry(new_pose, msg->header);
 
