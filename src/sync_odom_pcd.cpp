@@ -45,7 +45,7 @@ public:
         sync_->registerCallback(std::bind(&SyncOdomPcdNode::callback, this, _1, _2));
 
         // 동기화된 IMU 메시지 publish
-        lidar_pub_ = this->create_publisher<sensor_msgs::msg::PointCloud2>("/synced_velodyne_points", lidar_qos_profile);
+        lidar_pub_ = this->create_publisher<sensor_msgs::msg::PointCloud2>("/synced_points", lidar_qos_profile);
         odom_pub_ = this->create_publisher<nav_msgs::msg::Odometry>("/synced_odom", odom_qos_profile);
     }
 

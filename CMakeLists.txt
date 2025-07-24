@@ -23,6 +23,9 @@ find_package(tf2_ros REQUIRED)
 find_package(tf2_eigen REQUIRED)
 find_package(Open3D REQUIRED)
 find_package(Eigen3 REQUIRED)
+find_package(PCL REQUIRED COMPONENTS common io)
+find_package(pcl_conversions REQUIRED)
+find_package(tf2_geometry_msgs REQUIRED)
 
 
 set(AEVA_API_ROS2_BUILD true)
@@ -44,6 +47,9 @@ set(DEPENDENCIES
   tf2_ros
   tf2_eigen
   visualization_msgs
+  pcl_conversions
+  pcl_msgs
+  tf2_geometry_msgs
 )
 
 
@@ -64,6 +70,11 @@ add_executable(sync_odom_pcd
 )
 ament_target_dependencies(sync_odom_pcd ${DEPENDENCIES}) 
 
+add_executable(mapping_node
+  src/mapping_node.cpp
+)
+ament_target_dependencies(mapping_node ${DEPENDENCIES})
+
 target_link_libraries(aeva_driver_node
   AevaAPI
 )
@@ -73,11 +84,13 @@ target_link_libraries(doppler_icp_node
   Eigen3::Eigen
 )
 
+target_link_libraries(mapping_node ${PCL_LIBRARIES})
+
 install(TARGETS
   aeva_driver_node
-  # odom_publisher_node
   doppler_icp_node
   sync_odom_pcd
+  mapping_node 
   DESTINATION lib/${PROJECT_NAME}
 )
 
