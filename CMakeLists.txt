@@ -59,6 +59,10 @@ add_executable(doppler_icp_node
 )
 ament_target_dependencies(doppler_icp_node ${DEPENDENCIES}) 
 
+add_executable(sync_odom_pcd
+  src/sync_odom_pcd.cpp
+)
+ament_target_dependencies(sync_odom_pcd ${DEPENDENCIES}) 
 
 target_link_libraries(aeva_driver_node
   AevaAPI
@@ -73,7 +77,11 @@ install(TARGETS
   aeva_driver_node
   # odom_publisher_node
   doppler_icp_node
+  sync_odom_pcd
   DESTINATION lib/${PROJECT_NAME}
 )
+
+install(DIRECTORY launch DESTINATION share/${PROJECT_NAME})
+install(DIRECTORY config DESTINATION share/${PROJECT_NAME})
 
 ament_package()

@@ -30,10 +30,12 @@ PCDPublisher::PCDPublisher()
 
   aeva_api_.RegisterPointCloudMessageCallback(
     aeva::api::kPointCloudDataStreamId,
+    // aeva::api::kPointCloudPointGroupDataStreamId,
     std::bind(&PCDPublisher::PublishPointCloud, this, std::placeholders::_1)
   );
 
   aeva_api_.Subscribe(sensor.id_, aeva::api::kPointCloudDataStreamId);
+  // aeva_api_.Subscribe(sensor.id_, aeva::api::kPointCloudPointGroupDataStreamId);
 
   poll_timer_ = this->create_wall_timer(
     std::chrono::milliseconds(5),
