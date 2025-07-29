@@ -75,6 +75,11 @@ add_executable(mapping_node
 )
 ament_target_dependencies(mapping_node ${DEPENDENCIES})
 
+add_executable(lidar_time_sync
+  src/lidar_time_sync.cpp
+)
+ament_target_dependencies(lidar_time_sync ${DEPENDENCIES})
+
 target_link_libraries(aeva_driver_node
   AevaAPI
 )
@@ -90,7 +95,8 @@ install(TARGETS
   aeva_driver_node
   doppler_icp_node
   sync_odom_pcd
-  mapping_node 
+  mapping_node
+  lidar_time_sync
   DESTINATION lib/${PROJECT_NAME}
 )
 
