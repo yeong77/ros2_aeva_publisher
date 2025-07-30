@@ -15,7 +15,7 @@ void PCDPublisher::PublishPointCloud(const aeva::api::PointCloud& point_cloud) {
 
   sensor_msgs::msg::PointCloud2 ros_msg;
   ros_msg.header.stamp = this->get_clock()->now();
-  ros_msg.header.frame_id = "aeva_frame"; //point_cloud.header_.sensor_id_;
+  ros_msg.header.frame_id = "velodyne"; //"aeva_frame"; //point_cloud.header_.sensor_id_;
   ros_msg.height = 1;
   ros_msg.width = point_cloud.points.size();
   ros_msg.is_dense = true;

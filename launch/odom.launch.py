@@ -32,8 +32,16 @@ def generate_launch_description():
         ]
     )
 
+    lidar_time_sync = Node(
+        package=pkg_name,
+        executable='lidar_time_sync',
+        name='lidar_time_sync',
+        output='screen'
+    )
+
     return LaunchDescription([
         aeva_driver_node,
         doppler_icp_node,
-        sync_odom_pcd_node
+        sync_odom_pcd_node,
+        lidar_time_sync
     ])

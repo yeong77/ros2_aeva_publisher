@@ -35,7 +35,7 @@ public:
         options.qos_overriding_options = rclcpp::QosOverridingOptions::with_default_policies();
 
         odom_sub_.subscribe(this, "/odom", rmw_qos_profile_sensor_data);
-        lidar_sub_.subscribe(this, "/velodyne_points", rmw_qos_profile_sensor_data);
+        lidar_sub_.subscribe(this, "/merged_points", rmw_qos_profile_sensor_data);
 
         // Approximate Time Synchronizer 동기화 정책 설정 
         sync_ = std::make_shared<message_filters::Synchronizer<SyncPolicy>>(SyncPolicy(100), lidar_sub_, odom_sub_);

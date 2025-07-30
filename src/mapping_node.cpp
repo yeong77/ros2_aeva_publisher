@@ -31,6 +31,11 @@ public:
 
         map_pub_ = this->create_publisher<sensor_msgs::msg::PointCloud2>("/map", 10);
 
+        timer_ = this->create_wall_timer(
+            std::chrono::milliseconds(500),
+            std::bind(&MappingNode::timer_callback, this));
+
+
         RCLCPP_INFO(this->get_logger(), "MappingNode initialized.");
     }
 
@@ -64,16 +69,21 @@ private:
 
         // 4. 누적
         *accumulated_map_ += *cloud_transformed;
-
-        // 5. 퍼블리시
-        sensor_msgs::msg::PointCloud2 map_msg;
-        pcl::toROSMsg(*accumulated_map_, map_msg);
-        map_msg.header.stamp = this->get_clock()->now();
-        map_msg.header.frame_id = "map";  // 오도메트리를 월드 기준으로 사용
-        map_pub_->publish(map_msg);
-
-        RCLCPP_INFO(this->get_logger(), "point cloud map published");
     }
+
+    void timer_callback()
+    {
+        if (!accumulated_map_->empty()) {
+            sensor_msgs::msg::PointCloud2 map_msg;
+            pcl::toROSMsg(*accumulated_map_, map_msg);
+            map_msg.header.stamp = this->get_clock()->now();
+            map_msg.header.frame_id = "map"; 
+            map_pub_->publish(map_msg);
+
+            RCLCPP_DEBUG(this->get_logger(), "Map published (via timer)");
+        }
+    }
+    
 
     // Subscribers
     rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr odom_sub_;
@@ -81,6 +91,8 @@ private:
 
     // Publisher
     rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr map_pub_;
+
+    rclcpp::TimerBase::SharedPtr timer_;
 
     nav_msgs::msg::Odometry::SharedPtr last_odom_;
 
